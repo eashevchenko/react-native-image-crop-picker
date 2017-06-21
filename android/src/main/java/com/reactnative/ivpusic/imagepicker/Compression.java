@@ -18,6 +18,9 @@ import id.zelory.compressor.Compressor;
 
 public class Compression {
 
+    private static final int COMPRESS_DEFAULT_WIDTH = 800;
+    private static final int COMPRESS_DEFAULT_HEIGHT = 600;
+
     public File compressImage(final Activity activity, final ReadableMap options, final String originalImagePath) {
         Integer maxWidth = options.hasKey("compressImageMaxWidth") ? options.getInt("compressImageMaxWidth") : null;
         Integer maxHeight = options.hasKey("compressImageMaxHeight") ? options.getInt("compressImageMaxHeight") : null;
@@ -53,6 +56,27 @@ public class Compression {
         }
 
         return builder
+                .build()
+                .compressToFile(new File(originalImagePath));
+    }
+
+    public File compressPhoto(final Activity activity, final ReadableMap options, final String originalImagePath) {
+        Integer maxWidth = options.hasKey("compressImageMaxWidth") ? options.getInt("compressImageMaxWidth") : COMPRESS_DEFAULT_WIDTH;
+        Integer maxHeight = options.hasKey("compressImageMaxHeight") ? options.getInt("compressImageMaxHeight") : COMPRESS_DEFAULT_HEIGHT;
+        Double quality = options.hasKey("compressImageQuality") ? options.getDouble("compressImageQuality") : 100;
+
+        if (maxWidth == null && maxHeight == null && quality == null) {
+            Log.d("image-crop-picker", "Skipping image compression");
+            return new File(originalImagePath);
+        }
+
+        return new Compressor.Builder(activity)
+                .setMaxWidth(maxWidth)
+                .setMaxHeight(maxHeight)
+                .setQuality(100)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES).getAbsolutePath())
                 .build()
                 .compressToFile(new File(originalImagePath));
     }
