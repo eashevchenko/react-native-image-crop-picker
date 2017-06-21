@@ -524,7 +524,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
 
         // if compression options are provided image will be compressed. If none options is provided,
         // then original image will be returned
-        File compressedImage = compression.compressImage(activity, options, path);
+        File compressedImage = compression.compressPhoto(activity, options, path);
         String compressedImagePath = compressedImage.getPath();
         BitmapFactory.Options options = validateImage(compressedImagePath);
 
